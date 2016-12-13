@@ -11,8 +11,8 @@ var createScene = function()
     
 	//Gestion de la caméra
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 3, -10), scene);
-    camera.applyGravity = true;
-	camera.checkCollisions = true; //Pour les collisions, et éviter de rentrer dans des murs et autres éléments.
+    //camera.applyGravity = true;
+	//camera.checkCollisions = true; //Pour les collisions, et éviter de rentrer dans des murs et autres éléments.
     camera.setTarget(new BABYLON.Vector3(0,3,0)); //Fait regarder la caméra à l'origine de la scène
 	
 	camera.speed = 0.5;
@@ -28,9 +28,24 @@ var createScene = function()
     camera.attachControl(canvas, false); //Attachement de la caméra au canvas (pour voir la scène dans celui-ci);
     
     //Gestion de la lumière
-	var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+	var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0.1, 0.1, 0), scene);
     light.intensity = .75;
     
+	//Gestion de la skybox
+	var skybox = BABYLON.Mesh.CreateBox("skyBox", 300.0, scene);
+	var skyboxMat = new BABYLON.StandardMaterial("skyBox/", scene);
+	skyboxMat.backFaceCulling = false;
+	skyboxMat.disableLighting = true;
+	skybox.material = skyboxMat;
+	
+	skyboxMat.diffuseColor = new BABYLON.Color3(0, 0, 0);
+	skyboxMat.specularColor = new BABYLON.Color3(0, 0, 0);
+	
+	skyboxMat.reflectionTexture = new BABYLON.CubeTexture("skybox/skybox", scene);
+	skyboxMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+	
+	skybox.infiniteDistance = true;
+
     //Création d'une sphere avec 16 largitudes (comprendre le découpage, plus c'est haut, plus il y aura de polygones), de taille 2.
     var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
     sphere.position.y = 1;
@@ -49,11 +64,11 @@ var createScene = function()
 	
 	//On crée une nouvelle texture pour le sol
 	var groundMat = new BABYLON.StandardMaterial("ground", scene);
-	groundMat.diffuseTexture = new BABYLON.Texture("texture/floor.jpg", scene); //Le diffuse est ce qui va être affiché (aka le diffuse)
-	groundMat.bumpTexture = new BABYLON.Texture("texture/floor_nor.jpg", scene); //Le bump permet de simuler une profondeur avec une "normal texture".
-	groundMat.diffuseTexture.uScale = 16.0; //Et on répète la texture pour avoir un meilleur résultat.
+	groundMat.diffuseTexture = new BABYLON.Texture("texture/240.jpg", scene); //Le diffuse est ce qui va être affiché (aka le diffuse)
+	groundMat.bumpTexture = new BABYLON.Texture("texture/240_norm.jpg", scene); //Le bump permet de simuler une profondeur avec une "normal texture".
+	groundMat.diffuseTexture.uScale = 16.0 * 1.5; //Et on répète la texture pour avoir un meilleur résultat.
 	groundMat.diffuseTexture.vScale = 16.0;
-	groundMat.bumpTexture.uScale = 16.0;
+	groundMat.bumpTexture.uScale = 16.0 * 1.5;
 	groundMat.bumpTexture.vScale = 16.0;
 	
 	ground.material = groundMat; //Et on l'applique au sol
@@ -79,11 +94,15 @@ var createScene = function()
 	
 	var salle = loader.addMeshTask("salle", "", "obj/", "salle.obj"); //On charge l'objet en question
 	salle.onSuccess = function(t) {
-        t.loadedMeshes.forEach(function(m) {
+        t.loadedMeshes.forEach(function(m) { //On édite ici chaque maillage de l'objet
             m.position.y = 2.5; //Pour le monter en hauteur
-			m.checkCollisions = true;
+			m.position.x = 10; //Et on le décale un peu pour que quand on commence, il soit bien placé.
+			m.checkCollisions = true; //Et bien sûr, on s'assure qu'on ne puisse pas les traverser.
         });
 	};
+	
+	engine.loadingUIText = "Chargement de l'exposition en cours.";
+	engine.loadingUIBackgroundColor = "purple";
 	  
 	loader.onFinish = function() {
 		//On fait le rendu de la scène ici.
