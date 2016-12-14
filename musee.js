@@ -11,8 +11,8 @@ var createScene = function()
     
 	//Gestion de la caméra
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 3, -10), scene);
-    //camera.applyGravity = true;
-	//camera.checkCollisions = true; //Pour les collisions, et éviter de rentrer dans des murs et autres éléments.
+    camera.applyGravity = true;
+	camera.checkCollisions = true; //Pour les collisions, et éviter de rentrer dans des murs et autres éléments.
     camera.setTarget(new BABYLON.Vector3(0,3,0)); //Fait regarder la caméra à l'origine de la scène
 	
 	camera.speed = 0.5;
