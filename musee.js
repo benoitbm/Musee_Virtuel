@@ -35,7 +35,7 @@ var createScene = function()
     scene.activeCamera = camera;
 	scene.activeCamera.attachControl(canvas, true); //Attachement de la caméra au canvas (pour voir la scène dans celui-ci);
     
-	/*
+
 	//Blocage du pointeur de la souris
 	var islocked = false;
 	
@@ -46,6 +46,8 @@ var createScene = function()
 			canvas.requestPointerLock = canvas.requestPointerLock || canvas.msRequestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock || false; //On la bloque (on fait la requete pour différents navigateurs ici, html5, IE + Edge, Mozilla, Webkit)
 			if (canvas.requestPointerLock) //Si la requête aboutie,
 				canvas.requestPointerLock(); //On appelle la fonction
+
+			engine.switchFullscreen(true);
 		}
 		
 		//continue with shooting requests or whatever :P
@@ -58,7 +60,7 @@ var createScene = function()
 	{
 		var controlEnabled = document.mozPointerLockElement || document.webkitPointerLockElement || document.msPointerLockElement || document.pointerLockElement || false; //On rajoute le false par sécrité au cas où aucun des précédents éléments ne fonctionnement pas.
 		if (!controlEnabled) {
-			//camera.detachControl(canvas);
+			camera.detachControl(canvas);
 			isLocked = false;
 		} else {
 			camera.attachControl(canvas);
@@ -71,7 +73,7 @@ var createScene = function()
 	document.addEventListener("mspointerlockchange", pointerlockchange, false);
 	document.addEventListener("mozpointerlockchange", pointerlockchange, false);
 	document.addEventListener("webkitpointerlockchange", pointerlockchange, false);
-	*/
+
 			
     //Gestion de la lumière
 	var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0.1, 0.1, 0), scene);
