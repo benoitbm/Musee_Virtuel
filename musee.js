@@ -25,7 +25,7 @@ var createScene = function()
     camera.setTarget(new BABYLON.Vector3(0,3,0)); //Fait regarder la caméra à l'origine de la scène
 	
 	camera.speed = 0.5;
-	camera.angularSensibility = 2000; //Plus la sensibilité est haute, moins la souris va vite.
+	camera.angularSensibility = 3500; //Plus la sensibilité est haute, moins la souris va vite.
 	camera.ellipsoid = new BABYLON.Vector3(1,1.5,1); //Modification de la hitbox de la caméra.
 	
 	//GESTION DES CONTROLES
@@ -80,7 +80,7 @@ var createScene = function()
 
 			
     //Gestion de la lumière
-	var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0.1, 0.1, 0), scene);
+	var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0.1, 0.2, 0), scene);
     light.intensity = .75;
     
 	//Gestion de la skybox
@@ -127,13 +127,84 @@ var createScene = function()
 	
 	
 	//BOITE DE COLLISION
-	var box = BABYLON.Mesh.CreateBox("learn", 5, scene);
-	box.position = new BABYLON.Vector3(50, 0, -20);
-	//box.checkCollisions = true;
+	var box = BABYLON.Mesh.CreateBox("learn", 38, scene);
+	box.position = new BABYLON.Vector3(55, -15, -27);
 	
-	camera.actionManager = new BABYLON.ActionManager(scene);
-	camera.actionManager.registerAction(new BABYLON.SetValueAction({ trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: box }, box, "scaling", new BABYLON.Vector3(1.2, 1.2, 1.2)));
+	var invisibleMat = new BABYLON.StandardMaterial("invisible", scene);
+	invisibleMat.alpha = 0; //On met l'alpha à 0, ce qui rend la texture invisible
 
+	box.material = invisibleMat;
+	
+	//Mini système solaire pour zone collision 
+	
+	//Commencons avec le soleil qui sera la référence
+	var soleil = BABYLON.Mesh.CreateSphere('sun', 16, 6, scene);
+	soleil.position = new BABYLON.Vector3(55, 13, -27);
+	var soleilMat = new BABYLON.StandardMaterial('sun', scene);
+	soleilMat.emissiveTexture = new BABYLON.Texture('texture/soleil.jpg', scene);
+	soleilMat.diffuseColor = new BABYLON.Color3(0, 0, 0); //On met là aussi à 0 pour éviter les reflets et autres puisque la lumière vient de l'interieur
+	soleilMat.specularColor = new BABYLON.Color3(0, 0, 0);
+	soleil.material = soleilMat;
+
+	var sunLight = new BABYLON.PointLight('sunLight', new BABYLON.Vector3(40, 10, -27), scene);
+	sunLight.intensity = .7;
+	
+	//Creation des planetes
+	var mercure = BABYLON.Mesh.CreateSphere('mercure', 16, 0.4 * 2, scene); //Dans un premier temps la planète
+	mercure.position = new BABYLON.Vector3(55, 13, -27); //On met le même centre que le soleil (= soleil.position ne semble pas fonctionner)
+  	mercure.position.x += 3 + 3.5 * 2; //On rajoute la distance (3 = diamètre soleil + distance planete-soleil en UA * 10)
+  	mercure.orbit = {
+		radius: soleil.position.x - mercure.position.x, //C'est la distance += sur la ligne précédente, utilisée pour les calculs plus tard
+		speed: -(0.01 * (365/88)), //La vitesse qu'on lui donnera
+		angle: 0
+  	};
+	
+	var mercureMat = new BABYLON.StandardMaterial("matMerc", scene);
+	mercureMat.emissiveTexture = new BABYLON.Texture('texture/mercurymap.jpg', scene);
+	mercure.material = mercureMat;
+
+	
+	var venus = BABYLON.Mesh.CreateSphere('venus', 16, 0.95 * 2, scene);
+	venus.position = new BABYLON.Vector3(55, 13, -27);
+  	venus.position.x += 3 + 7.23 * 2;
+  	venus.orbit = {
+		radius: soleil.position.x - venus.position.x,
+		speed: -(0.01 * (365/224)),
+		angle: 0
+  	};
+	
+	var venusMat = new BABYLON.StandardMaterial("matVen", scene);
+	venusMat.emissiveTexture = new BABYLON.Texture('texture/venusmap.jpg', scene);
+	venus.material = venusMat;
+
+	
+	var terre = BABYLON.Mesh.CreateSphere('terre', 16, 1 * 2, scene);
+	terre.position = new BABYLON.Vector3(55, 13, -27);
+  	terre.position.x += 3 + 10 * 2;
+  	terre.orbit = {
+		radius: soleil.position.x - terre.position.x,
+		speed: -0.01,
+		angle: 0
+  	};
+	
+	var terreMat = new BABYLON.StandardMaterial("matTer", scene);
+	terreMat.emissiveTexture = new BABYLON.Texture('texture/earthmap.jpg', scene);
+	terre.material = terreMat;
+	
+	
+	var mars = BABYLON.Mesh.CreateSphere('mars', 16, 0.6 * 2, scene);
+	mars.position = new BABYLON.Vector3(55, 13, -27);
+  	mars.position.x += 3 + 15.2 * 2;
+  	mars.orbit = {
+		radius: soleil.position.x - mars.position.x,
+		speed: -0.005, //Mars met 2x plus de temps pour faire sa révolution que la Terre
+		angle: 0
+  	};
+	
+	var marsMat = new BABYLON.StandardMaterial("matMar", scene);
+	marsMat.emissiveTexture = new BABYLON.Texture('texture/marsmap.jpg', scene);
+	mars.material = marsMat;
+	
 	
 	//CREATION D'UN ECRAN VIDEO
 	//Ecran TV
@@ -146,6 +217,8 @@ var createScene = function()
 	var videoMat = new BABYLON.StandardMaterial("textVid", scene);
     videoMat.diffuseTexture = new BABYLON.VideoTexture("video", ["video/faculte.mp4"], scene, false);
     videoMat.backFaceCulling = false; //Pour pouvoir la voir des deux côtés du plan.
+	videoMat.diffuseColor = new BABYLON.Color3(1, 1, 1); //On manipule ces deux couleurs pour voir la vidéo quelque soit la luminosité.
+	videoMat.specularColor = new BABYLON.Color3(1, 1, 1);
 	
 	ecranFac.material = videoMat; //On applique la texture de vidéo à la surface concernée
 	
@@ -177,6 +250,25 @@ var createScene = function()
 	
 	
 	loader.load();
+	
+  	scene.beforeRender = function() {
+		mercure.position.x = 55 + mercure.orbit.radius * Math.sin(mercure.orbit.angle);
+		mercure.position.z = -27 + mercure.orbit.radius * Math.cos(mercure.orbit.angle);
+		mercure.orbit.angle += mercure.orbit.speed;
+		
+		venus.position.x = 55 + venus.orbit.radius * Math.sin(venus.orbit.angle);
+		venus.position.z = -27 + venus.orbit.radius * Math.cos(venus.orbit.angle);
+		venus.orbit.angle += venus.orbit.speed;
+		
+		terre.position.x = 55 + terre.orbit.radius * Math.sin(terre.orbit.angle);
+		terre.position.z = -27 + terre.orbit.radius * Math.cos(terre.orbit.angle);
+		terre.orbit.angle += terre.orbit.speed;
+		
+		mars.position.x = 55 + mars.orbit.radius * Math.sin(mars.orbit.angle);
+		mars.position.z = -27 + mars.orbit.radius * Math.cos(mars.orbit.angle);
+		mars.orbit.angle += mars.orbit.speed;
+  	};
+	
 	return scene;
 }
 

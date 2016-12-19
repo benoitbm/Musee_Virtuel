@@ -13,6 +13,11 @@ canvas
 	height: 100%;
 }
 
+a
+{
+	color : white;
+}
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
