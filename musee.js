@@ -2,6 +2,8 @@ var canvas = document.getElementById("musee");
 
 var canTuto = false;
 
+var islocked = false;
+
 //Chargement du moteur
 var engine = new BABYLON.Engine(canvas, true); //Moteur WebGL
 
@@ -35,10 +37,14 @@ var createScene = function()
     scene.activeCamera = camera;
 	scene.activeCamera.attachControl(canvas, true); //Attachement de la caméra au canvas (pour voir la scène dans celui-ci);
     
-
-	//Blocage du pointeur de la souris
-	var islocked = false;
 	
+	//GESTION HITBOX POUR LES EVENEMENTS DE LA CAMERA
+	var hitbox = BABYLON.Mesh.CreateSphere("hitbox", 16, 1, scene);	
+	hitbox.parent = camera; //On attache la zone de collision à la caméra (pour qu'elle la suive)
+	hitbox.position = new BABYLON.Vector3(0, 0, 0);
+
+	
+	//Blocage du pointeur de la souris	
 	scene.onPointerDown = function(evt)
 	{
 		if (!islocked) //Si la souris n'est pas bloqué...
@@ -46,8 +52,6 @@ var createScene = function()
 			canvas.requestPointerLock = canvas.requestPointerLock || canvas.msRequestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock || false; //On la bloque (on fait la requete pour différents navigateurs ici, html5, IE + Edge, Mozilla, Webkit)
 			if (canvas.requestPointerLock) //Si la requête aboutie,
 				canvas.requestPointerLock(); //On appelle la fonction
-
-			engine.switchFullscreen(true);
 		}
 		
 		//continue with shooting requests or whatever :P
@@ -61,10 +65,10 @@ var createScene = function()
 		var controlEnabled = document.mozPointerLockElement || document.webkitPointerLockElement || document.msPointerLockElement || document.pointerLockElement || false; //On rajoute le false par sécrité au cas où aucun des précédents éléments ne fonctionnement pas.
 		if (!controlEnabled) {
 			camera.detachControl(canvas);
-			isLocked = false;
+			islocked = false;
 		} else {
 			camera.attachControl(canvas);
-			isLocked = true;
+			islocked = true;
 		}
 	};
 	
@@ -129,7 +133,7 @@ var createScene = function()
 	
 	camera.actionManager = new BABYLON.ActionManager(scene);
 	camera.actionManager.registerAction(new BABYLON.SetValueAction({ trigger: BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter: box }, box, "scaling", new BABYLON.Vector3(1.2, 1.2, 1.2)));
-	console.log(camera);
+
 	
 	//CREATION D'UN ECRAN VIDEO
 	//Ecran TV
@@ -165,7 +169,7 @@ var createScene = function()
 	loader.onFinish = function() {
 		//On fait le rendu de la scène ici.
 		engine.runRenderLoop(function() {
-			
+			canTuto = hitbox.intersectsMesh(box, false); 
 			
 			scene.render();
 		});
@@ -182,9 +186,30 @@ var scene = createScene();
 window.addEventListener('resize', function(){engine.resize()});
 
 window.addEventListener("keypress", function(e){
-	if (e.key == "e")
-		window.open("https://codepen.io/kowlor/pen/ZYYQoy", '_blank');
+	if (e.key == "e" && canTuto)
+	{
+		modal.style.display = "block";
+		islocked = false;
+		
+	}
 	
 });
 
 //document.addEventListener("contextmenu", function(e) { e.preventDefault();}); //On surpasse le clic droit pour éviter que le menu par défaut s'affiche
+
+var modal = document.getElementById('myModal');
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
