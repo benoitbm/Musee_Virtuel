@@ -1,6 +1,7 @@
 var canvas = document.getElementById("musee");
 
 var canTuto = false;
+var canTutoJeu = false;
 
 var islocked = false;
 
@@ -19,6 +20,7 @@ var createScene = function()
 	var loader = new BABYLON.AssetsManager(scene);
 	
 	//Gestion de la caméra
+	{
     var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 3, -10), scene);
     camera.applyGravity = true;
 	camera.checkCollisions = true; //Pour les collisions, et éviter de rentrer dans des murs et autres éléments.
@@ -36,13 +38,12 @@ var createScene = function()
 	
     scene.activeCamera = camera;
 	scene.activeCamera.attachControl(canvas, true); //Attachement de la caméra au canvas (pour voir la scène dans celui-ci);
-    
+	}
 	
 	//GESTION HITBOX POUR LES EVENEMENTS DE LA CAMERA
 	var hitbox = BABYLON.Mesh.CreateSphere("hitbox", 16, 1, scene);	
 	hitbox.parent = camera; //On attache la zone de collision à la caméra (pour qu'elle la suive)
 	hitbox.position = new BABYLON.Vector3(0, 0, 0);
-
 	
 	//Blocage du pointeur de la souris	
 	scene.onPointerDown = function(evt)
@@ -84,6 +85,7 @@ var createScene = function()
     light.intensity = .75;
     
 	//Gestion de la skybox
+	{
 	var skybox = BABYLON.Mesh.CreateBox("skyBox", 300.0, scene);
 	var skyboxMat = new BABYLON.StandardMaterial("skyBox/", scene);
 	skyboxMat.backFaceCulling = false;
@@ -97,6 +99,7 @@ var createScene = function()
 	skyboxMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
 	
 	skybox.infiniteDistance = true;
+	}
 
     //Création d'une sphere avec 16 largitudes (comprendre le découpage, plus c'est haut, plus il y aura de polygones), de taille 2.
     var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
@@ -110,6 +113,7 @@ var createScene = function()
 	
 	
 	//CREATION DU SOL
+	{
     //Nom, longueur, profondeur, sous-parties, scène
     var ground = BABYLON.Mesh.CreateGround("ground1", 150, 100, 8, scene);
 	ground.checkCollisions = true;
@@ -124,9 +128,9 @@ var createScene = function()
 	groundMat.bumpTexture.vScale = 16.0;
 	
 	ground.material = groundMat; //Et on l'applique au sol
+	}
 	
-	
-	//BOITE DE COLLISION
+	//BOITE DE COLLISION (pour le système solaire)
 	var box = BABYLON.Mesh.CreateBox("learn", 38, scene);
 	box.position = new BABYLON.Vector3(55, -15, -27);
 	
@@ -136,7 +140,7 @@ var createScene = function()
 	box.material = invisibleMat;
 	
 	//Mini système solaire pour zone collision 
-	
+	{
 	//Commencons avec le soleil qui sera la référence
 	var soleil = BABYLON.Mesh.CreateSphere('sun', 16, 6, scene);
 	soleil.position = new BABYLON.Vector3(55, 13, -27);
@@ -150,13 +154,14 @@ var createScene = function()
 	sunLight.intensity = .7;
 	
 	//Creation des planetes
+	{
 	var mercure = BABYLON.Mesh.CreateSphere('mercure', 16, 0.4 * 2, scene); //Dans un premier temps la planète
 	mercure.position = new BABYLON.Vector3(55, 13, -27); //On met le même centre que le soleil (= soleil.position ne semble pas fonctionner)
   	mercure.position.x += 3 + 3.5 * 2; //On rajoute la distance (3 = diamètre soleil + distance planete-soleil en UA * 10)
   	mercure.orbit = {
 		radius: soleil.position.x - mercure.position.x, //C'est la distance += sur la ligne précédente, utilisée pour les calculs plus tard
 		speed: -(0.01 * (365/88)), //La vitesse qu'on lui donnera
-		angle: 0
+		angle: 0 //L'angle sera le compteur lors de la rotation
   	};
 	
 	var mercureMat = new BABYLON.StandardMaterial("matMerc", scene);
@@ -204,13 +209,15 @@ var createScene = function()
 	var marsMat = new BABYLON.StandardMaterial("matMar", scene);
 	marsMat.emissiveTexture = new BABYLON.Texture('texture/marsmap.jpg', scene);
 	mars.material = marsMat;
-	
+	}
+	}
 	
 	//CREATION D'UN ECRAN VIDEO
 	//Ecran TV
-	var ecranFac = BABYLON.Mesh.CreatePlane("TVFac", 1, scene); 
-	ecranFac.scaling.x = 16;
-	ecranFac.scaling.y = 9;
+	{
+	var ecranFac = BABYLON.Mesh.CreatePlane("TVFac", 1.5, scene); 
+	ecranFac.scaling.x *= 16; //Application d'un format 16:9 pour coller au format de la video.
+	ecranFac.scaling.y *= 9;
 	ecranFac.position = new BABYLON.Vector3(0, 10, 20);
 	
 	//Materiau de vidéo
@@ -223,7 +230,7 @@ var createScene = function()
 	ecranFac.material = videoMat; //On applique la texture de vidéo à la surface concernée
 	
 	videoMat.diffuseTexture.video.loop = true; //Et on joue la vidéo (en boucle).
-	
+	}
 	
 	//Création des murs de la salle
 	var salle = loader.addMeshTask("salle", "", "obj/", "salle.obj"); //On charge l'objet en question
@@ -243,6 +250,11 @@ var createScene = function()
 		//On fait le rendu de la scène ici.
 		engine.runRenderLoop(function() {
 			canTuto = hitbox.intersectsMesh(box, false); 
+
+			if ((canTuto || canTutoJeu) && tutoSol.style.display != "block") //Boucle pour savoir s'il faut afficher le texte pour dire qu'on peut interagir ou non
+				pressE.style.display = "block";
+			else
+				pressE.style.display = "none"
 			
 			scene.render();
 		});
@@ -251,22 +263,29 @@ var createScene = function()
 	
 	loader.load();
 	
+	//Cette partie sert à précharger des fonctions qui tourneront en boucle pendant le rendu (et qui seront toujours la même instruction).
   	scene.beforeRender = function() {
-		mercure.position.x = 55 + mercure.orbit.radius * Math.sin(mercure.orbit.angle);
-		mercure.position.z = -27 + mercure.orbit.radius * Math.cos(mercure.orbit.angle);
-		mercure.orbit.angle += mercure.orbit.speed;
+		sphere.rotation.y -= 1/90;
+		
+		mercure.position.x = 55 + mercure.orbit.radius * Math.sin(mercure.orbit.angle); //X du soleil + (distance merc-soleil * sin(angle))
+		mercure.position.z = -27 + mercure.orbit.radius * Math.cos(mercure.orbit.angle); //Z du soleil + (distance merc-soleil * cos(angle))
+		mercure.orbit.angle += mercure.orbit.speed; //Incrément du compteur de la position
+		mercure.rotation.y -= ((1/30) * (365/88));
 		
 		venus.position.x = 55 + venus.orbit.radius * Math.sin(venus.orbit.angle);
 		venus.position.z = -27 + venus.orbit.radius * Math.cos(venus.orbit.angle);
 		venus.orbit.angle += venus.orbit.speed;
+		venus.rotation.y -= (1/28);
 		
 		terre.position.x = 55 + terre.orbit.radius * Math.sin(terre.orbit.angle);
 		terre.position.z = -27 + terre.orbit.radius * Math.cos(terre.orbit.angle);
 		terre.orbit.angle += terre.orbit.speed;
+		terre.rotation.y -= 1/30;
 		
 		mars.position.x = 55 + mars.orbit.radius * Math.sin(mars.orbit.angle);
 		mars.position.z = -27 + mars.orbit.radius * Math.cos(mars.orbit.angle);
 		mars.orbit.angle += mars.orbit.speed;
+		mars.rotation.y -= 1/50;
   	};
 	
 	return scene;
@@ -280,28 +299,41 @@ window.addEventListener('resize', function(){engine.resize()});
 window.addEventListener("keypress", function(e){
 	if (e.key == "e" && canTuto)
 	{
-		modal.style.display = "block";
+		pressE.style.display = "none";
+		tutoSol.style.display = "block";
 		islocked = false;
-		
+	}
+	else if (e.key && canTutoJeu)
+	{
+		pressE.style.display = "none";
+		tutoSol.style.display = "block";
+		islocked = false;		
 	}
 	
 });
 
 //document.addEventListener("contextmenu", function(e) { e.preventDefault();}); //On surpasse le clic droit pour éviter que le menu par défaut s'affiche
 
-var modal = document.getElementById('myModal');
+var pressE = document.getElementById('texteGUI');
+var tutoSol = document.getElementById('tutoSolaire');
+var tutoJeu = document.getElementById('tutoJeu');
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
-    modal.style.display = "none";
+    tutoSol.style.display = "none";
+	tutoJeu.style.display = "none";
+	pressE.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+    if (event.target == tutoSol) 
+        tutoSol.style.display = "none";
+	else if (event.target == tutoJeu)
+		tutoJeu.style.display = "none";
+	else if (event.target == pressE) 
+      pressE.style.display = "none";
 }
