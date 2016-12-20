@@ -1,3 +1,9 @@
+/* Notes à propos du code
+*	La plupart des éléments viennent de la documentation et des tutoriaux de l'API de BabylonJS.
+*	Pour le système solaire, adaptation de https://github.com/paullucas/babylon-solar 
+*	Pour les menus dit "Modal", algo et code source venant de W3C
+*/
+
 var canvas = document.getElementById("musee");
 
 var canTuto = false;

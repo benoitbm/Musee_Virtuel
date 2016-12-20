@@ -1,15 +1,129 @@
 <!DOCTYPE html>
-
+<!-- Utilisation du CSS et du template venant de W3Schools, et adapté pour le projet -->
 <html>
     <head>
         <link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+		
+		<!-- JS pour afficher des blocs de code en HTML (guide : https://github.com/google/code-prettify )-->
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		
+		<title>Musée virtuel -- Technote IHM</title>
     </head>
     
     <body>
-        Page d'accueil du projet, en cours de construction ! <br>
-		Vers musée : <a href="musee.html">Lien vers visite</a>
-    
+		<nav class="w3-sidenav w3-purple w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold" id="mySidenav"><br>
+			<a href="javascript:void(0)" onclick="w3_close()" class="w3-padding-xlarge w3-hide-large w3-display-topleft w3-hover-white" style="width:100%;font-size:22px">Close Menu</a>
+			<div class="w3-container">
+				<h3 class="w3-padding-64"><b>Interaction<br>Homme-Machine</b><br><br>Technote<br>Musée Virtuel<br>Priscilla K. & Benoit B.</h3>
+			</div>
+
+			  	<a href="#avpropos" onclick="w3_close()" class="w3-padding w3-hover-white">Avant-Propos</a> 
+			  	<a href="#musee" onclick="w3_close()" class="w3-padding w3-hover-white">Musée virtuel</a> 
+			  	<a href="#squelette" onclick="w3_close()" class="w3-padding w3-hover-white">Création du squelette</a> 
+			  	<a href="#scene" onclick="w3_close()" class="w3-padding w3-hover-white">Première scène</a> 
+			  	<a href="#controles" onclick="w3_close()" class="w3-padding w3-hover-white">Contrôles</a>
+				<a href="#enceinte" onclick="w3_close()" class="w3-padding w3-hover-white">Enceinte du musée</a>
+				<a href="#textures" onclick="w3_close()" class="w3-padding w3-hover-white">Textures & Lumières</a>
+				<a href="#collision" onclick="w3_close()" class="w3-padding w3-hover-white">Zones de collision</a>
+				<a href="#modale" onclick="w3_close()" class="w3-padding w3-hover-white">Vues modales</a>
+			<a href="#expo" onclick="w3_close()" class="w3-padding w3-hover-white">Mise en place de l'expo</a>
+			<a href="#conclusion" onclick="w3_close()" class="w3-padding w3-hover-white">Conclusion</a>
+		</nav>
+		
+		<header class="w3-container w3-top w3-hide-large w3-purple w3-xlarge w3-padding">
+			  <a href="javascript:void(0)" class="w3-btn w3-purple w3-border w3-border-white w3-margin-right" onclick="w3_open()">☰</a>
+			  <span>Technote IHM</span>
+		</header>
+		
+		<div class="w3-main" style="margin-left:340px;margin-right:40px">	
+			  <div class="w3-container" style="margin-top:80px" id="showcase">
+				<h1 class="w3-jumbo"><b>Technote d'IHM : Musée Virtuel.</b></h1>
+				  <h2>Par Priscilla K. & Benoit B.</h2>
+			  </div>
+		
+			<div class="w3-container" id="avpropos" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-purple"><b>Avant-propos.</b></h1>
+				<hr style="width:50px;border:5px solid purple" class="w3-round">
+				<p>Dans le cadre de notre premier Semestre dans le cours d'interaction Homme-Machine, nous avions comme projet initial de réaliser un musée de l'interaction. Après concertation, nous avons décidés de continuer indirectement le projet en réalisant une technote (que vous êtes en train de consulter) expliquant et montrant comment créer un musée virtuel en 3D avec WebGL.</p>
+				<p>Pour cela, nous avons utilisé la librairie <a href="http://babylonjs.com/" target="_blank">Babylon JS</a> pour faciliter l'utilisation de WebGL, ainsi que <a href="https://www.blender.org/" target="_blank">Blender</a> pour créer l'enceinte du musée virtuel.</p>
+			</div>
+			
+			<div class="w3-container" id="musee" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-purple"><b>Musée virtuel.</b></h1>
+				<hr style="width:50px;border:5px solid purple" class="w3-round">
+				<div class="w3-row-padding">
+					<div class="w3-half"> <!-- Partie gauche des photos -->
+						  <img src="img/musee1.jpg" style="width:100%" onclick="onClick(this)" alt="L'acceuil du musée">
+					</div>
+
+					<div class="w3-half"> <!-- Partie droite -->
+						  <img src="img/musee2.jpg" style="width:100%" onclick="onClick(this)" alt="Une partie de notre système solaire.">
+					</div>
+				 </div>
+				<p>Le musée virtuel est un exemple d'une exposition qu'on pourrait retrouver dans un musée de l'interaction. Le thème choisi est l'espace, avec des interactions liées à ce thème. Les éléments ne redirigent nulle-part, mais on pourrait imaginer rediriger vers une autre section du site dediée à cette oeuvre, où le visiteur pourrait avoir des informations plus avancées que celles fournies par l'exposition virtuelle.</p>
+				<p>Dans cette technote, vous découvrirez comment re-créer cette salle étape par étape, et ainsi le faire évoluer vers d'autres possibilités comme :</p>
+				<ul>
+					<li>Un grand musée virtuel en réalité virtuelle (Babylon JS est compatible avec des casques de réalité virtuelle).</li>
+					<li>Une partie d'une exposition d'un vrai musée impactant dans la salle où vous vous trouvez.</li>
+					<li>Un jeu d'aventures/d'exploration comme <u>Myst</u>&trade;.</li>
+					<li>Un jeu de tir à la première personne ou à la troisième personne.</li>
+					<li>Un portfolio interactif...</li>
+				</ul>
+				<h3>Commandes</h3>
+				<p>Le musée tel quel ne peut être joué qu'avec un clavier et une souris. Cependant, on pourrait brancher une manette de <u>Xbox 360</u>&trade; filaire et jouer, ou bien utiliser un dispositif de réalité virtuelle.</p>
+				<ul>
+					<li>Flèches directionelles ou Z/Q/S/D : <b>Se déplacer</b></li>
+					<li>Touche E : <b>Interagir</b></li>
+					<li>Echap : Afficher le curseur.</li>
+				</ul>
+				
+				<h3>Navigateurs compatibles</h3>
+				<p><b>Mozilla Firefox</b> et <b>Internet Explorer</b> fonctionnent parfaitement. Google Chrome et Opéra ont des problèmes de fonctionnement. Les autres navigateurs n'ont pas été testés.</p>
+				
+				<h3>Musée virtuel</h3>
+				<p>Pour acceder au musée virtuel, cliquez sur <b><a href="musee.html" target="_blank">ce lien</a></b>. (La page s'ouvrira dans un nouvel onglet)</p>
+				<pre class="prettyprint lang-js">
+var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0.1, 0.2, 0), scene);
+light.intensity = .6; //C'est trop bien
+var pomme = 0;
+pomme += 1;
+				</pre>
+			</div>
+			
+			<div class="w3-light-grey w3-container w3-padding-32" style="margin-top:75px;padding-right:58px"><p class="w3-right">Boosté par le <a href="http://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-opacity">w3.css</a></p></div>
+			
+			  <!-- Partie modale pour un visualiseur de photos-->
+			  <div id="modal01" class="w3-modal w3-black w3-padding-0" onclick="this.style.display='none'">
+					<span class="w3-closebtn w3-text-white w3-opacity w3-hover-opacity-off w3-xxlarge w3-container w3-display-topright">×</span>
+					<div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
+						  <img id="img01" class="w3-image">
+						  <p id="caption"></p>
+					</div>
+			  </div>
+			
+		</div>
     </body>    
     
-     <div id="footer"></div>
+	<script>
+		// Script to open and close sidenav
+		function w3_open() {
+			document.getElementById("mySidenav").style.display = "block";
+			document.getElementById("myOverlay").style.display = "block";
+		}
+
+		function w3_close() {
+			document.getElementById("mySidenav").style.display = "none";
+			document.getElementById("myOverlay").style.display = "none";
+		}
+		
+		function onClick(element) {
+		  	document.getElementById("img01").src = element.src;
+		  	document.getElementById("modal01").style.display = "block";
+		  	var captionText = document.getElementById("caption");
+		  	captionText.innerHTML = element.alt;
+		}
+	</script>
+    
 </html>
