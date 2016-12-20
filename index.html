@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="css/style.css" />
 		<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-		
+        
 		<!-- JS pour afficher des blocs de code en HTML (guide : https://github.com/google/code-prettify )-->
 		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 		
@@ -19,15 +19,15 @@
 				<h3 class="w3-padding-64"><b>Interaction<br>Homme-Machine</b><br><br>Technote<br>Musée Virtuel<br>Priscilla K. & Benoit B.</h3>
 			</div>
 
-			  	<a href="#avpropos" onclick="w3_close()" class="w3-padding w3-hover-white">Avant-Propos</a> 
-			  	<a href="#musee" onclick="w3_close()" class="w3-padding w3-hover-white">Musée virtuel</a> 
-			  	<a href="#squelette" onclick="w3_close()" class="w3-padding w3-hover-white">Création du squelette</a> 
-			  	<a href="#scene" onclick="w3_close()" class="w3-padding w3-hover-white">Première scène</a> 
-			  	<a href="#controles" onclick="w3_close()" class="w3-padding w3-hover-white">Contrôles</a>
-				<a href="#enceinte" onclick="w3_close()" class="w3-padding w3-hover-white">Enceinte du musée</a>
-				<a href="#textures" onclick="w3_close()" class="w3-padding w3-hover-white">Textures & Lumières</a>
-				<a href="#collision" onclick="w3_close()" class="w3-padding w3-hover-white">Zones de collision</a>
-				<a href="#modale" onclick="w3_close()" class="w3-padding w3-hover-white">Vues modales</a>
+			<a href="#avpropos" onclick="w3_close()" class="w3-padding w3-hover-white">Avant-Propos</a> 
+			<a href="#musee" onclick="w3_close()" class="w3-padding w3-hover-white">Musée virtuel</a> 
+			<a href="#squelette" onclick="w3_close()" class="w3-padding w3-hover-white">Création du squelette</a> 
+			<a href="#scene" onclick="w3_close()" class="w3-padding w3-hover-white">Première scène</a> 
+			<a href="#controles" onclick="w3_close()" class="w3-padding w3-hover-white">Contrôles</a>
+			<a href="#enceinte" onclick="w3_close()" class="w3-padding w3-hover-white">Enceinte du musée</a>
+			<a href="#collision" onclick="w3_close()" class="w3-padding w3-hover-white">Gestion des collisions</a>
+			<a href="#textures" onclick="w3_close()" class="w3-padding w3-hover-white">Textures & Lumières</a>
+			<a href="#modale" onclick="w3_close()" class="w3-padding w3-hover-white">Vues modales</a>
 			<a href="#expo" onclick="w3_close()" class="w3-padding w3-hover-white">Mise en place de l'expo</a>
 			<a href="#conclusion" onclick="w3_close()" class="w3-padding w3-hover-white">Conclusion</a>
 		</nav>
@@ -38,14 +38,14 @@
 		</header>
 		
 		<div class="w3-main" style="margin-left:340px;margin-right:40px">	
-			  <div class="w3-container" style="margin-top:80px" id="showcase">
+            <div class="w3-container" style="margin-top:80px">
 				<h1 class="w3-jumbo"><b>Technote d'IHM : Musée Virtuel.</b></h1>
 				  <h2>Par Priscilla K. & Benoit B.</h2>
 			  </div>
 		
 			<div class="w3-container" id="avpropos" style="margin-top:75px">
-				<h1 class="w3-xxxlarge w3-text-purple"><b>Avant-propos.</b></h1>
-				<hr style="width:50px;border:5px solid purple" class="w3-round">
+				<h1 class="w3-xxxlarge w3-text-red"><b>Avant-propos.</b></h1>
+				<hr style="width:50px;border:5px solid red" class="w3-round">
 				<p>Dans le cadre de notre premier Semestre dans le cours d'interaction Homme-Machine, nous avions comme projet initial de réaliser un musée de l'interaction. Après concertation, nous avons décidés de continuer indirectement le projet en réalisant une technote (que vous êtes en train de consulter) expliquant et montrant comment créer un musée virtuel en 3D avec WebGL.</p>
 				<p>Pour cela, nous avons utilisé la librairie <a href="http://babylonjs.com/" target="_blank">Babylon JS</a> pour faciliter l'utilisation de WebGL, ainsi que <a href="https://www.blender.org/" target="_blank">Blender</a> pour créer l'enceinte du musée virtuel.</p>
 			</div>
@@ -80,16 +80,183 @@
 				</ul>
 				
 				<h3>Navigateurs compatibles</h3>
-				<p><b>Mozilla Firefox</b> et <b>Internet Explorer</b> fonctionnent parfaitement. Google Chrome et Opéra ont des problèmes de fonctionnement. Les autres navigateurs n'ont pas été testés.</p>
+				<p><b>Mozilla Firefox</b> et <b>Internet Explorer</b> fonctionnent parfaitement. Les autres navigateurs n'ont pas été testés.</p>
 				
 				<h3>Musée virtuel</h3>
 				<p>Pour acceder au musée virtuel, cliquez sur <b><a href="musee.html" target="_blank">ce lien</a></b>. (La page s'ouvrira dans un nouvel onglet)</p>
-				<pre class="prettyprint lang-js">
-var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0.1, 0.2, 0), scene);
-light.intensity = .6; //C'est trop bien
-var pomme = 0;
-pomme += 1;
-				</pre>
+			</div>
+            
+            <div class="w3-container" id="squelette" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-blue"><b>Création du squelette.</b></h1>
+				<hr style="width:50px;border:5px solid blue" class="w3-round">
+				<p>Dans un premier temps, nous allons mettre en place l'architecture du projet, et pour mon cas, voici l'organisation des fichiers et des dossiers :</p>
+                <ul>
+                    Dossier racine :
+                    <li><b><i>css</i></b>: Dossier qui contiendra les feuilles de style du projet.</li>
+                    <ul>
+                        <li><b>app.css</b>: CSS pour la page de l'exposition</li>
+                        <li><b>style.css</b>: CSS général</li>
+                    </ul>
+                    
+                    <li><b><i>img</i></b>: Dossier qui contiendra les images liés à l'habillage du site (photos, illustrations)</li>
+                    <ul>
+                        <li><b><i>icon</i></b>: Dossier qui contiendra les icones pour l'habillage du site</li>
+                    </ul>
+                    
+                    <li><i>obj</i>: Dossier optionnel contenant les objets 3D pour le rendu</li>
+                    
+                    <li><b><i>src</i></b>: Dossier qui contiendra les fichiers sources exterieurs / librairies pour le projet</li>
+                    
+                    <li><b><i>texture</i></b>: Dossier qui contiendra les textures pour le rendu</li>
+                    <ul>
+                        <li><b><i>skybox</i></b>: Dossier recommandé qui contiendra les textures pour la skybox</li>
+                        <li><b><i>video</i></b>: Dossier qui contiendra les vidéos pour l'exposition</li>
+                    </ul>
+                    
+                    <li><b>index.html</b>: Le fichier d'acceuil pour recevoir les visiteurs</li>
+                    <li><b>musee.html</b>: Le fichier qui contiendra l'exposition virtuelle</li>
+                    <li><b>musee.js</b>: Le fichier qui contiendra les fonctions et algorithmes pour l'exposition virtuelle</li>
+                </ul>
+                <p>Une fois les dossiers et les fichiers crées, l'architecture et le squelette du projet est prêt, et nous pouvons commencer à créer le projet.</p>
+			</div>
+            
+            <div class="w3-container" id="scene" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-blue"><b>Première scène.</b></h1>
+				<hr style="width:50px;border:5px solid blue" class="w3-round">
+				<p>Avant de créer la scène, assurez vous d'avoir téléchargé Babylon.js à <a href="http://babylonjs.com/versionBuilder/" target="_blank">cette adresse</a>. Choisissez les composants que vous aurez besoin, dans notre cas, prenez <b>OBJ</b> dans la section <u>LOADERS</u>.</p>
+                <p>Dans un premier temps, nous allons préparer les fichiers <b>musee.html</b> et <b>app.css</b>.</p>
+                <h3>musee.html</h3>
+                <xmp class="prettyprint lang-html"><!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/app.css" />
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>Exposition virtuelle</title>
+    </head>
+    <body>
+        <script src="src/babylon.js"></script>
+        <canvas id="musee"></canvas>
+        <script src="musee.js"></script>
+    </body>
+</html>
+                </xmp>
+                <p>Nous chargeons dans le header le css (expliqué ci-dessous), on précise l'encodage (ici l'utf-8) et le titre de l'onglet.</p>
+                <p>Dans le body, babylon.js est chargé pour pouvoir faire le rendu 3D de la scène, le canvas va être le support pour le rendu, et en dernier le script dans lequel nous allons créer la scène sera chargée.</p>
+                
+                <h3>app.css</h3>
+                <xmp class="prettyprint lang-css">body, html
+{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+canvas
+{
+    width: 100%;
+    height: 100%;
+}                
+                </xmp>
+                
+                <p>Dans le css, on pousse le canvas à occuper toute la taille disponible par le navigateur, et on met le <code>overflow</code> sur la valeur <code>hidden</code> pour éviter d'avoir la barre de défilement vertical.</p>
+                
+                <h3>musee.js</h3>
+                <p>Dans un premier temps, nous allons récupérer le canvas pour pouvoir mettre le rendu de la scène dans celui-ci.</p>
+                <code class="prettyprint lang=js">var canvas = document.getElementById("musee");</code>
+                <p>Ensuite nous allons instancier le moteur.</p>
+                <code class="prettyprint lang=js">var engine = new BABYLON.Engine(canvas, true);</code>
+                <p>Puis on crée une fonction pour instancier la scène.</p>
+                <pre class="prettyprint lang=js">var createScene = function(){
+                
+    var scene = new BABYLON.Scene(engine); //On crée une nouvelle scène
+    scene.clearColor = new BABYLON.Color3(0, 0, 0.2); //Couleur par défaut quand il n'y a pas d'élement (soit la couleur au fond)
+    
+    //Création d'une caméra avec les paramètres : string nom_camera, Vector3 position, scene
+    var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 3, -10), scene);
+    
+    camera.setTarget(BABYLON.Vector3.Zero()); //On fait regarder la caméra vers l'origine de la scène.
+    
+    camera.attachControl(canvas, false); //On attache les contrôles de la scène via le canvas qu'on a crée tout à l'heure dans musee.html
+    
+    //Paramètres : string nom, Vector3 orientation_lumière, scene
+    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene); //On crée une nouvelle lumière générale orientée vers le haut
+
+    light.intensity = .5; //On diminue un peu l'intensité de la lumière
+    
+    //Paramètres : string nom, int nombre_sous-divisions, int diamètre, scene
+    var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene); //On rajoute une sphère pour voir du visuel (et qui sera le centre de la salle d'exposition).
+    
+    sphere.position.y = 1; //On fait monter un peu la sphère.
+    
+    //Paramètres : string nom, int longueur (axe x), int largeur (axe z), int sous-divisions, scene
+    var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene); //On crée un sol (petit certes) qui servira plus tard
+    
+    return scene; //Et on renvoie la scène pour pouvoir l'afficher plus tard.    
+}</pre>
+            <p>A cette étape, nous avons une scène, une caméra contrôlée par le canvas et par extension l'utilisateur, une lumière, une sphère et le sol.</p>
+            <p>Cependant, cette fonction n'est jamais appelée, donc aucune scène créée, et la scène n'a pas une boucle de rendu. Pour cela, on rajoute dans la fonction <code>createScene</code> avec ces lignes :</p>
+            <pre class="prettyprint lang=js">engine.runRenderLoop(function () {
+    scene.render();
+ });</pre>
+                <p>Et on peut appeler la fonction en dehors de la fonction, à la fin du fichier.</p>
+                <code class="prettyprint lang=js">var scene = createScene();</code>
+                <p>Maintenant votre première scène est créée, et devrait ressembler à ça :</p>
+                <img src="img/pscene1.jpg" style="width:100%" onclick="onClick(this)" alt="Résultat de la première scène.">
+                <p>On peut améliorer encore ce résultat avec ce code suivant :</p>
+                <code class="prettyprint lang=js">window.addEventListener('resize', function(){engine.resize()});</code>
+                <p>Cette ligne permet à chaque redimentionnement de la fenêtre du navigateur d'adapter à nouveau la taille du rendu du canvas.</p>
+                <p>Félicitations, vous venez de créer votre première scène en WebGL avec BabylonJS ! Vous pouvez tester à <a href="http://www.babylonjs-playground.com/#1GM4YQ" target="_blank">cette adresse</a> le résultat attendu.</p>
+			</div>
+            
+            <div class="w3-container" id="controles" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-blue"><b>Gestion des contrôles.</b></h1>
+				<hr style="width:50px;border:5px solid blue" class="w3-round">
+				<p>
+                </p>
+			</div>
+            
+            <div class="w3-container" id="enceinte" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-blue"><b>Création de l'enceinte du musée.</b></h1>
+				<hr style="width:50px;border:5px solid blue" class="w3-round">
+				<p>
+                </p>
+			</div>
+            
+            <div class="w3-container" id="collision" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-blue"><b>Gestion des collisions.</b></h1>
+				<hr style="width:50px;border:5px solid blue" class="w3-round">
+				<p>
+                </p>
+			</div>
+            
+            <div class="w3-container" id="textures" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-blue"><b>Ajout des textures et des lumières.</b></h1>
+				<hr style="width:50px;border:5px solid blue" class="w3-round">
+				<p>
+                </p>
+			</div>
+            
+            <div class="w3-container" id="modale" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-blue"><b>Vues modales.</b></h1>
+				<hr style="width:50px;border:5px solid blue" class="w3-round">
+				<p>
+                </p>
+			</div>
+            
+            <div class="w3-container" id="expo" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-purple"><b>Mise en place de l'exposition virtuelle.</b></h1>
+				<hr style="width:50px;border:5px solid purple" class="w3-round">
+				<p>
+                </p>
+			</div>
+            
+            <div class="w3-container" id="conclusion" style="margin-top:75px">
+				<h1 class="w3-xxxlarge w3-text-red"><b>Conclusion.</b></h1>
+				<hr style="width:50px;border:5px solid red" class="w3-round">
+				<p>
+                </p>
 			</div>
 			
 			<div class="w3-light-grey w3-container w3-padding-32" style="margin-top:75px;padding-right:58px"><p class="w3-right">Boosté par le <a href="http://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-opacity">w3.css</a></p></div>
