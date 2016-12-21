@@ -94,8 +94,8 @@ var createScene = function()
     
 	//Gestion de la skybox
 	{
-		var skybox = BABYLON.Mesh.CreateBox("skyBox", 300.0, scene);
-		var skyboxMat = new BABYLON.StandardMaterial("skyBox/", scene);
+		var skybox = BABYLON.Mesh.CreateBox("skybox", 300.0, scene);
+		var skyboxMat = new BABYLON.StandardMaterial("skybox", scene);
 		skyboxMat.backFaceCulling = false;
 		skyboxMat.disableLighting = true;
 		skybox.material = skyboxMat;
@@ -268,7 +268,8 @@ var createScene = function()
 		lumJeuExpo.intensity = 2;
 		lumJeuExpo.diffuse = new BABYLON.Color3(0,1,0); //Vert
 		
-		var sphereJVExpo = BABYLON.Mesh.CreateSphere("sphereNeige", 16, 14, scene);
+        //Sphere de zone
+		var sphereJVExpo = BABYLON.Mesh.CreateSphere("sphereJV", 16, 14, scene);
 		sphereJVExpo.position = new BABYLON.Vector3(28, 0, 8);
 		sphereJVExpo.material = invisibleMat;
 	}

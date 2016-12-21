@@ -28,7 +28,7 @@
 			<a href="#controles" onclick="w3_close()" class="w3-padding w3-hover-white">Contrôles</a>
 			<a href="#enceinte" onclick="w3_close()" class="w3-padding w3-hover-white">Enceinte du musée</a>
 			<a href="#collision" onclick="w3_close()" class="w3-padding w3-hover-white">Gestion des collisions</a>
-			<a href="#textures" onclick="w3_close()" class="w3-padding w3-hover-white">Textures & Lumières</a>
+			<a href="#textures" onclick="w3_close()" class="w3-padding w3-hover-white">Ajout des textures</a>
 			<a href="#modale" onclick="w3_close()" class="w3-padding w3-hover-white">Vues modales</a>
 			<a href="#expo" onclick="w3_close()" class="w3-padding w3-hover-white">Mise en place de l'expo</a>
 			<a href="#conclusion" onclick="w3_close()" class="w3-padding w3-hover-white">Conclusion</a>
@@ -48,7 +48,7 @@
 			<div class="w3-container" id="avpropos" style="margin-top:75px">
 				<h1 class="w3-xxxlarge w3-text-red"><b>Avant-propos.</b></h1>
 				<hr style="width:50px;border:5px solid red" class="w3-round">
-				<p>Dans le cadre de notre premier Semestre dans le cours d'interaction Homme-Machine, nous avions comme projet initial de réaliser un musée de l'interaction. Après concertation, nous avons décidés de continuer indirectement le projet en réalisant une technote (que vous êtes en train de consulter) expliquant et montrant comment créer un musée virtuel en 3D avec WebGL.</p>
+				<p>Dans le cadre de notre premier Semestre dans le cours d'interaction Homme-Machine, nous avions comme projet initial de réaliser un musée de l'interaction. Après concertation, nous avons décidé de continuer indirectement le projet en réalisant une technote (que vous êtes en train de consulter) expliquant et montrant comment créer un musée virtuel en 3D avec WebGL.</p>
 				<p>Pour cela, nous avons utilisé la librairie <a href="http://babylonjs.com/" target="_blank">Babylon JS</a> pour faciliter l'utilisation de WebGL, ainsi que <a href="https://www.blender.org/" target="_blank">Blender</a> pour créer l'enceinte du musée virtuel.</p>
 			</div>
 			
@@ -64,8 +64,8 @@
 						  <img src="img/musee2.jpg" style="width:100%" onclick="onClick(this)" alt="Une partie de notre système solaire.">
 					</div>
 				 </div>
-				<p>Le musée virtuel est un exemple d'une exposition qu'on pourrait retrouver dans un musée de l'interaction. Le thème choisi est l'espace, avec des interactions liées à ce thème. Les éléments ne redirigent nulle-part, mais on pourrait imaginer rediriger vers une autre section du site dediée à cette oeuvre, où le visiteur pourrait avoir des informations plus avancées que celles fournies par l'exposition virtuelle.</p>
-				<p>Dans cette technote, vous découvrirez comment re-créer cette salle étape par étape, et ainsi le faire évoluer vers d'autres possibilités comme :</p>
+				<p>Le musée virtuel est un exemple d'une exposition qu'on pourrait retrouver dans un musée de l'interaction. Le thème choisi est l'espace, avec des interactions liées à ce thème. Les éléments ne redirigent nulle part, mais on pourrait imaginer rediriger vers une autre section du site dédiée à cette oeuvre, où le visiteur pourrait avoir des informations plus avancées que celles fournies par l'exposition virtuelle.</p>
+				<p>Dans cette technote, vous découvrirez comment recréer cette salle étape par étape, et ainsi le faire évoluer vers d'autres possibilités comme :</p>
 				<ul>
 					<li>Un grand musée virtuel en réalité virtuelle (Babylon JS est compatible avec des casques de réalité virtuelle).</li>
 					<li>Une partie d'une exposition d'un vrai musée impactant dans la salle où vous vous trouvez.</li>
@@ -215,7 +215,7 @@ canvas
             <div class="w3-container" id="controles" style="margin-top:75px">
 				<h1 class="w3-xxxlarge w3-text-blue"><b>Gestion des contrôles.</b></h1>
 				<hr style="width:50px;border:5px solid blue" class="w3-round">
-				<p>Dans cette section, nous allons voir comment améliorer les contrôles pour améliorer l'expérience de l'utilisateur. A l'heure actuelle, l'utilisateur peut bouger avec les flèches directionelles, et peut bouger la caméra en maintenant un clic de la souris et en bougeant celle-ci.</p>
+				<p>Dans cette section, nous allons voir comment améliorer les contrôles pour améliorer l'expérience de l'utilisateur. A l'heure actuelle, l'utilisateur peut bouger avec les flèches directionnelles, et peut bouger la caméra en maintenant un clic de la souris et en bougeant celle-ci.</p>
                 <p>Seulement les contrôles au clavier et à la souris seront vus dans cette technote, cependant BabylonJS gère l'utilisation d'une manette filaire <u>Xbox 360</u>&trade;, plus d'informations disponible à <a href="http://doc.babylonjs.com/classes/2.5/GamepadCamera" target="_blank">cette adresse</a>.</p>
                 
                 <h3>Modification des mouvements</h3>
@@ -235,7 +235,7 @@ camera.keysDown = [83, 40]; //S et flèche du bas
             <code class="prettyprint lang=js">camera.applyGravity = true;</code>
             
             <h3>Gestion du curseur</h3>
-            <p>Dans cette sous-partie, nous allons gérer le maniement du curseur. Lorsque l'utilisateur cliquera sur le rendu, celui-ci cachera le curseur et il suffira de bouger la souris pour voir.</p>
+            <p>Dans cette sous-partie, nous allons gérer le maniement du curseur. Lorsque l'utilisateur cliquera sur le rendu, celui-ci cachera le curseur et il suffira de bouger la souris pour déplacer le "regard" de la caméra.</p>
             <p>Dans un premier temps, on rajoute la fonction qui réagit au clic souris.</p>
             <pre class="prettyprint lang=js">//musee.js, dans la fonction createScene
 var islocked = false;
@@ -286,8 +286,8 @@ var pointerlockchange = function ()
 				<h1 class="w3-xxxlarge w3-text-blue"><b>Création de l'enceinte du musée.</b></h1>
 				<hr style="width:50px;border:5px solid blue" class="w3-round">
 				<p>Dans cette partie, nous allons créer l'enceinte du musée, et plus précisément les murs. Dans un premier temps, nous pouvons agrandir le sol pour avoir une plus grande surface.</p>
-                <p>Pour créer les murs, nous pouvons créer un cube par mur, ce qui peut être long et fastidieux, puisqu'il faut créer chaque cube, le place, et modifier ses dimensions. Ou nous pouvons charger un objet en 3D que nous avons pu créer à l'aide d'un logiciel de CAO (Conception Assisté par Ordinateur) comme <u>Blender</u>&trade; ou <u>Maya</u>&trade;.</p>
-                <p>On partira sur une enceinte crée dans un objet 3D au format <i>.obj</i>, que vous pourrez récuperer ici à ces liens : <a href="obj/salle.obj" target="_blank">partie 1</a> et <a href="obj/salle.mtl" target="_blank">partie 2</a>.</p>
+                <p>Pour créer les murs, nous pouvons créer un cube par mur, ce qui peut être long et fastidieux, puisqu'il faut créer chaque cube, le placer, et modifier ses dimensions. Ou nous pouvons charger un objet en 3D que nous avons pu créer à l'aide d'un logiciel de CAO (Conception Assistée par Ordinateur) comme <u>Blender</u>&trade; ou <u>Maya</u>&trade;.</p>
+                <p>On partira sur une enceinte crée dans un objet 3D au format <i>.obj</i>, que vous pourrez récupérer ici à ces liens : <a href="obj/salle.obj" target="_blank">partie 1</a> et <a href="obj/salle.mtl" target="_blank">partie 2</a>.</p>
                 <p>Vous aurez besoin de l'option <b>OBJ LOADER</b> lorsque vous avez téléchargé Babylon JS sur la page de téléchargement.</p>
                 <p>Le fait qu'on charge un objet, le moteur doit charger l'objet avant que le rendu soit effectué. Donc nous devons rajouter un loader, qui est un Asset Manager.</p>
                 <code class="prettyprint lang=js">var loader = new BABYLON.AssetsManager(scene);</code>
@@ -336,7 +336,7 @@ salle.onSuccess = function(t) {
 			</div>
             
             <div class="w3-container" id="textures" style="margin-top:75px">
-				<h1 class="w3-xxxlarge w3-text-blue"><b>Ajout des textures et des lumières.</b></h1>
+				<h1 class="w3-xxxlarge w3-text-blue"><b>Ajout des textures.</b></h1>
 				<hr style="width:50px;border:5px solid blue" class="w3-round">
 				<p>Actuellement, notre musée ressemble à des salles sans textures, et une lumière basique, qui ressemble à cela :</p>
                 <img src="img/mat1.jpg" style="width:100%" onclick="onClick(this)" alt="La salle d'exposition, sans textures.">
@@ -400,6 +400,42 @@ mat_sol.bumpTexture.vScale = 16.0;</pre>
                 
                 <p>On peut ensuite appliquer le matériau à l'objet choisi, et faire jouer la ou les vidéos en boucle.</p>
                 <code class="prettyprint lang=js">videoMat.diffuseTexture.video.loop = true;</code>
+                
+                <h3>Les skybox</h3>
+                <p>On peut simuler un faux ciel avec un cube géant contenant une texture de ciel, qu'on appelle Skybox. Dans le cas de notre musée avec pour thème l'espace, nous avons choisi de mettre un skybox avec des photos de l'espace.</p>
+                <p>Dans un premier temps, nous allons créer un cube de grande taille.</p>
+                <code class="prettyprint lang=js">var skybox = BABYLON.Mesh.CreateBox("skybox", 300, scene);</code>
+                
+                <p>Ensuite, nous créeons un matériau pour la skybox.</p>
+                <code class="prettyprint lang=js">var skyboxmat = new BABYLON.StandardMaterial("m_skybox", scene);</code>
+                
+                <p>Suite à cela, nous allons rajouter quelques options. Les premières sont de pouvoir visualiser les textures depuis l'intérieur de cube et désactiver l'impact des lumières sur le matériau.</p>
+                <code class="prettyprint lang=js">skyboxmat.backFaceCulling = false;</code><br>
+                <code class="prettyprint lang=js">skyboxmat.disableLightning = true;</code>
+                
+                <p>Ensuite on met les couleurs à 0 pour empêcher définitivement l'impact des lumières sur la skybox.</p>
+                <code class="prettyprint lang=js">skyboxmat.diffuseColor = new BABYLON.Color3(0, 0, 0);</code><br>
+                <code class="prettyprint lang=js">skyboxmat.specularColor = new BABYLON.Color3(0, 0, 0);</code>
+                
+                <p>Après, on charge les textures de la skybox.</p>
+                <code>skyboxmat.reflectionTexture = new BABYLON.CubeTexture("texture/skybox/skybox", scene);</code>
+                
+                <p>Le fonctionnement des textures pour la skybox est unique, pour cela, vous aurez besoin de 6 images représentant chacune un côté du cube. Le nom sera partiellement défini par le dernier mot du paramètre passé précédement, dans notre cas, la texture de la face droite s'appellera <i>skybox_px</i>. Mais si par exemple le paramètre aurait été <code class="prettyprint lang=js">"skybox/toto"</code>, la texture devra s'appeler <i>toto_px</i>. Pour les textures donc, vous devrez rajouter un '_' après le nom indiqué, et rajouter un autre mot selon la face du cube représenté :</p>
+                <ul>
+                    <li>nx pour la face de gauche</li>
+                    <li>px pour la face de droite</li>
+                    <li>ny pour la face du dessous</li>
+                    <li>py pour la face du dessus</li>
+                    <li>nz pour la face de devant</li>
+                    <li>pz pour la face de derrière</li>
+                </ul>
+                
+                <p>Ensuite il faut indiquer au matériau le mode de coordonnées.</p>
+                <code class="prettyprint lang=js">skyboxMat.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;</code>
+                
+                <p>Et pour terminer, on applique le matériau à la skybox, et on indique à babylonJS que l'élement a une distance infinie pour améliorer l'impression de ciel de la skybox.</p>
+                <code class="prettyprint lang=js">skybox.material = skyboxMat;</code><br>
+                <code class="prettyprint lang=js">skybox.infiniteDistance = true;</code>
                 
                 <p>Bravo, vous savez désormais manier les textures de BabylonJS !</p>
 			</div>
@@ -487,7 +523,8 @@ mat_sol.bumpTexture.vScale = 16.0;</pre>
     from {opacity: 0} 
     to {opacity: 1}
 }</pre>
-            <p>Suite à cela, nous allons rajouter du contenu modal dans le fichier <b>musee.html</b>. Il doit se trouver entre le canvas et le chargement du script <b>musee.js</b>.</p>
+            
+                <p>Suite à cela, nous allons rajouter du contenu modal dans le fichier <b>musee.html</b>. Il doit se trouver entre le canvas et le chargement du script <b>musee.js</b>.</p>
                 <xmp class="prettyprint lang=html"><div id="fenetreModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -504,20 +541,88 @@ mat_sol.bumpTexture.vScale = 16.0;</pre>
         </div>
     </div>
 </div></xmp>
+                
+                <p>Ensuite, nous allons rajouter des éléments au fichier <b>musee.js</b> pour qu'on puisse utiliser ces fenêtres. Dans un premier temps, nous allons ajouter ces éléments à la fin du document.</p>
+                <pre class="prettyprint lang=js">var fenetreModal = document.getElementById('fenetreModal'); //On récupère la fenêtre modale du fichier musee.html
+var span = document.getElementsByClassName("close")[0] //On récupère la croix de la fenêtre modale
+span.onclick = function(){fenetreModal.style.display = "none";} //On cache la fenêtre modale si on clique sur la croix
+windows.onclick = function(event){
+    if(event.target == fenetreModal)
+        fenetreModal.style.display = "none";
+}//Si on clique sur la partie sombre, la fenêtre modale se fermera.</pre>
+                
+                <p>Les fenêtres modales sont presque prêtes à l'emploi, il suffit de les activer dans le rendu. Dans un premier temps, au début du fichier, nous allons déclarer une variable globale au début du fichier pour savoir si on est dans une zone de description.</p>
+                <code class="prettyprint lang=js">var canDisplay = false;</code>
+                
+                <p>Ensuite, nous allons créer une sphere qui servira de zone de trigger pour afficher le contenu, et qui sera invisible. (On peut faire un matériau invisible en mettant son alpha à 0).</p>
+                <pre class="prettyprint lang=js">//Dans la fonction createScene
+var sphereModal = BABYLON.Mesh.CreateSphere("sphereModal", 16, 14, scene);
+sphereModal.material = invisbleMat;</pre>
+                <p>Il ne reste plus que dans la boucle de rendu de tester si la sphere de collision attaché à la caméra a une collision avec cette sphere, et on pourra détecter si la caméra est dans cette zone.</p>
+                <code class="prettyprint lang=js">canDisplay = hitbox.intersects(sphereModal, false);</code>
+                
+                <p>Pour terminer, il suffit de rajouter à la fin du fichier de script un DOM pour quand on presse la touche "e" de faire afficher la fenêtre modale.</p>
+                <pre class="prettyprint lang=js">window.addEventListener("keypress", function(e){
+    if (e.key == "e" && canDisplay)
+        fenetreModal.style.display = "block";
+});</pre>
+            <p>Suite à cela, si vous entrez dans la sphere (si vous ne la trouvez pas, enlevez le matériau invisible), et si vous appuyez sur la touche E, vous devriez avoir ce résultat :</p>
+                <img src="img/modal1.jpg" style="width:100%" onclick="onClick(this)" alt="Le rendu avec une fenêtre modale">
+                <p>Suite à cela, nous avons tous les éléments de prêt, nous pouvons commencer à créer notre exposition.</p>
 			</div>
             
             <div class="w3-container" id="expo" style="margin-top:75px">
 				<h1 class="w3-xxxlarge w3-text-purple"><b>Mise en place de l'exposition virtuelle.</b></h1>
 				<hr style="width:50px;border:5px solid purple" class="w3-round">
-				<p>
-                </p>
-			</div>
+				<p>Lors des précédents chapitres, nous avons tout mis en place et préparé les objets et fonctions pour créer l'exposition. Il faut maintenant tout raccorder pour obtenir les résultat montré au début. Pour créer une oeuvre d'interaction, on aura besoin de :</p>
+                <ul>
+                    <li>D'un plane avec une vidéo lié à l'interaction</li>
+                    <li>Une fenêtre modale décrivant l'interaction</li>
+                    <li>Une sphere pour pouvoir déclencher la fenêtre</li>
+                    <li>Une lumière pour marquer l'emplacement de l'interaction</li>
+                </ul>
+                <p>Tout combiné, nous devrions obtenir un élément de ce type :</p>
+                <img src="img/expo1.jpg" style="width:100%" onclick="onClick(this)" alt="Exemple d'un élément d'exposition">
+                
+                <p>Nous devrions avoir ce code pour chaque élément exposé :</p>     
+                <pre class="prettyprint lang=js">//Dans la fonction createScene
+//Ecran de l'expo
+var ecranJeu = BABYLON.Mesh.CreatePlane("TVJeu", 1, scene);
+ecranJeu.rotation.y = Math.acos(0); //On tourne l'écran pour qu'il colle au mur de droite
+ecranJeu.scaling.x *= 16; //Application d'un format 16:9 pour coller au format de la video.
+ecranJeu.scaling.y *= 9;
+ecranJeu.position = new BABYLON.Vector3(35.41, 6, 8);
+
+//Materiau de vidéo
+var videoJeu = new BABYLON.StandardMaterial("textVidJeu", scene);
+videoJeu.diffuseTexture = new BABYLON.VideoTexture("videoJeu", ["video/jeu.mp4"], scene, false);
+videoJeu.backFaceCulling = false; //Pour pouvoir la voir des deux côtés du plan.
+videoJeu.diffuseColor = new BABYLON.Color3(255, 255, 255); //On manipule ces deux couleurs pour voir la vidéo quelque soit la luminosité.
+videoJeu.specularColor = new BABYLON.Color3(0, 0, 0);
+
+ecranJeu.material = videoJeu; 
+
+videoJeu.diffuseTexture.video.loop = true; 
+		
+//Lumière
+var lumJeuExpo = new BABYLON.SpotLight("SpotJV", new BABYLON.Vector3(28, 15, 8), new BABYLON.Vector3(0, -1, 0), .8, 2, scene);
+lumJeuExpo.intensity = 2;
+lumJeuExpo.diffuse = new BABYLON.Color3(0,1,0); //Vert
+		
+//Sphere de zone
+var sphereJVExpo = BABYLON.Mesh.CreateSphere("sphereJV", 16, 14, scene);
+sphereJVExpo.position = new BABYLON.Vector3(28, 0, 8);
+sphereJVExpo.material = invisibleMat;</pre>
+			
+                <p>Suite à cela, on remplit la fenêtre modale lié à cet élément, on le déclare comme dans la section précédente, et on répète pour tous les éléments que l'on souhaite rajouter dans l'exposition. Adaptez comme vous le souhaitez, et vous félicitations, vous venez de créer votre propre exposition virtuelle de musée !</p>
+            </div>
             
             <div class="w3-container" id="conclusion" style="margin-top:75px">
 				<h1 class="w3-xxxlarge w3-text-red"><b>Conclusion.</b></h1>
 				<hr style="width:50px;border:5px solid red" class="w3-round">
-				<p>
-                </p>
+				<p>Et c'est ainsi que se termine cette technote tutoriel sur la création d'une exposition virtuelle d'un musée virtuel. On peut encore l'améliorer, comme par exemple créer une interface utilisateur pour indiquer à l'utilisateur qu'il peut interagir avec (ou l'améliorer au lieu d'utiliser une fenêtre modale comme dans la démonstration).</p>
+                <p>Cependant BabylonJS est encore une librairie récente, ainsi que le WebGL, donc certains éléments peuvent devenir obsolètes d'ici quelques années, cependant la librairie a un grand potentiel pour réaliser des présentations, des modélisations ou bien des jeux.</p>
+                <h4>Merci d'avoir suivi cette technote !</h4>
 			</div>
 			
 			<div class="w3-light-grey w3-container w3-padding-32" style="margin-top:75px;padding-right:58px"><p class="w3-right">Boosté par le <a href="http://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-opacity">w3.css</a></p></div>
