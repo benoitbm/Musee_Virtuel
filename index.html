@@ -2,6 +2,8 @@
 <!-- Utilisation du CSS et du template venant de W3Schools, et adapté pour le projet -->
 <html>
     <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        
         <link rel="stylesheet" href="css/style.css" />
 		<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
@@ -213,22 +215,124 @@ canvas
             <div class="w3-container" id="controles" style="margin-top:75px">
 				<h1 class="w3-xxxlarge w3-text-blue"><b>Gestion des contrôles.</b></h1>
 				<hr style="width:50px;border:5px solid blue" class="w3-round">
-				<p>
-                </p>
+				<p>Dans cette section, nous allons voir comment améliorer les contrôles pour améliorer l'expérience de l'utilisateur. A l'heure actuelle, l'utilisateur peut bouger avec les flèches directionelles, et peut bouger la caméra en maintenant un clic de la souris et en bougeant celle-ci.</p>
+                <p>Seulement les contrôles au clavier et à la souris seront vus dans cette technote, cependant BabylonJS gère l'utilisation d'une manette filaire <u>Xbox 360</u>&trade;, plus d'informations disponible à <a href="http://doc.babylonjs.com/classes/2.5/GamepadCamera" target="_blank">cette adresse</a>.</p>
+                
+                <h3>Modification des mouvements</h3>
+                <p>Dans un premier temps, nous allons modifier les déplacements de la caméra. Nous allons rajouter la possibilité de se déplacer avec les touches Z,Q,S et D.</p>
+                
+                <pre class="prettyprint lang=js">//musee.js, après la déclaration de la camera.
+camera.keysLeft = [81, 37]; //Q et <-
+camera.keysUp = [90, 38]; //Z et Flèche du haut
+camera.keysRight = [68, 39]; //D et ->
+camera.keysDown = [83, 40]; //S et flèche du bas
+</pre>
+            <p>Les fonctions <code>keys</code> combiné à une direction (en anglais) indique les touches du clavier pouvant bouger la caméra dans la direction liée.</p>
+            <p>Parmi la section des mouvements, on peut modifier la vitesse de déplacement de caméra avec cette option :</p>
+            <code class="prettyprint lang=js">camera.speed = 0.5;</code>
+            
+            <p>De plus, comme vous avez pu le constater, on peut se déplacer dans tous les sens dans l'espace à travers les murs (que l'on reglera plus tard dans la partie <u>Gestion des collisions</u>). Nous allons rajouter l'effet de la gravité sur la caméra en rajoutant cette ligne de code :</p>
+            <code class="prettyprint lang=js">camera.applyGravity = true;</code>
+            
+            <h3>Gestion du curseur</h3>
+            <p>Dans cette sous-partie, nous allons gérer le maniement du curseur. Lorsque l'utilisateur cliquera sur le rendu, celui-ci cachera le curseur et il suffira de bouger la souris pour voir.</p>
+            <p>Dans un premier temps, on rajoute la fonction qui réagit au clic souris.</p>
+            <pre class="prettyprint lang=js">//musee.js, dans la fonction createScene
+var islocked = false;
+scene.onPointerDown = function(evt)
+{
+    if (!islocked) //Si la souris n'est pas bloqué...
+    {
+	canvas.requestPointerLock = canvas.requestPointerLock || canvas.msRequestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock || false; 
+        //Test des requêtes de divers navigateurs
+        if (canvas.requestPointerLock) //Si la requête aboutie,
+            canvas.requestPointerLock(); //On appelle la fonction
+    }
+    //En testant ici si evt === 0, 1 ou 2, on peut déterminer quel clic a été pressé, et on peut effectuer
+    //des actions liées à un clic.
+};</pre>
+            <p>Une fois cette fonction implémentée, il reste plus qu'à créer les évènements DOM pour les navigateurs.</p>
+            
+            <pre class="prettyprint lang=js">//musee.js, dans la fonction createScene
+document.addEventListener("pointerlockchange", pointerlockchange, false);
+document.addEventListener("mspointerlockchange", pointerlockchange, false);
+document.addEventListener("mozpointerlockchange", pointerlockchange, false);
+document.addEventListener("webkitpointerlockchange", pointerlockchange, false);</pre>
+            
+            <p>Et il ne reste plus qu'à rajouter la fonction <code>pointerlockchange</code> pour gérer le contrôle de la souris dans le rendu lorsque le curseur est verrouillé dans le cas.</p>
+            
+            <pre class="prettyprint lang=js">//musee.js, à mettre avant les évènements
+var pointerlockchange = function () 
+{
+    var controlEnabled = document.mozPointerLockElement || document.webkitPointerLockElement || document.msPointerLockElement || document.pointerLockElement || false;
+    if (!controlEnabled) 
+    {
+        camera.detachControl(canvas);
+        islocked = false;
+    } 
+    else 
+    {
+        camera.attachControl(canvas);
+        islocked = true;
+    }
+};</pre>
+            <p>Suite à cela, vous devriez pouvoir verrouiller le curseur et bouger votre souris librement. Cependant selon le navigateur et l'IDE utilisé, il se peut qu'il y ait des problèmes de mouvement de souris (particulièrement avec Brackets + Google Chrome).</p>
+            <p>Par ailleurs, la sensibilité du mouvement de la caméra peut être reglée avec cette ligne :</p>
+            <code class="prettyprint lang=js">camera.angularSensibility = 3500;</code>
+            <p>Plus la valeur est elevée, moins la caméra tournera vite. Et cela conclut la partie sur la gestion et modification des contrôles.</p>
 			</div>
             
             <div class="w3-container" id="enceinte" style="margin-top:75px">
 				<h1 class="w3-xxxlarge w3-text-blue"><b>Création de l'enceinte du musée.</b></h1>
 				<hr style="width:50px;border:5px solid blue" class="w3-round">
-				<p>
-                </p>
+				<p>Dans cette partie, nous allons créer l'enceinte du musée, et plus précisément les murs. Dans un premier temps, nous pouvons agrandir le sol pour avoir une plus grande surface.</p>
+                <p>Pour créer les murs, nous pouvons créer un cube par mur, ce qui peut être long et fastidieux, puisqu'il faut créer chaque cube, le place, et modifier ses dimensions. Ou nous pouvons charger un objet en 3D que nous avons pu créer à l'aide d'un logiciel de CAO (Conception Assisté par Ordinateur) comme <u>Blender</u>&trade; ou <u>Maya</u>&trade;.</p>
+                <p>On partira sur une enceinte crée dans un objet 3D au format <i>.obj</i>, que vous pourrez récuperer ici à ces liens : <a href="obj/salle.obj" target="_blank">partie 1</a> et <a href="obj/salle.mtl" target="_blank">partie 2</a>.</p>
+                <p>Vous aurez besoin de l'option <b>OBJ LOADER</b> lorsque vous avez téléchargé Babylon JS sur la page de téléchargement.</p>
+                <p>Le fait qu'on charge un objet, le moteur doit charger l'objet avant que le rendu soit effectué. Donc nous devons rajouter un loader, qui est un Asset Manager.</p>
+                <code class="prettyprint lang=js">var loader = new BABYLON.AssetsManager(scene);</code>
+                
+                <p>Une fois le loader crée, on doit rajouter une tâche de chargement de Mesh (d'objet 3D) pour le loader, avec cette commande :</p>
+                <code class="prettyprint lang=jd">var salle = load.addMeshTask("nom", "", "obj/", "salle.obj");</code>
+                
+                <p>Suite à cela, on s'assure que le chargement a réussi, et suite à cela, on peut effectuer des opérations sur l'objet (comme le déplacer) :</p>
+                <pre class="prettyprint lang=js">//musee.js, dans createScene, après la déclaration de var salle
+salle.onSuccess = function(t) {
+    t.loadedMeshes.forEach(function(m) { //On édite ici chaque maillage de l'objet
+        m.position.y = 2.5; //Pour le monter en hauteur
+        m.position.x = 10; //Et on le décale un peu pour que quand on commence, il soit bien placé.
+	m.checkCollisions = true; //Ajout de la détection des collisions, expliqué plus tard.
+    });
+};</pre>
+            <p>Une fois les actions sur le maillage et l'objet ont été réalisés, on peut lancer le chargement et déclencler les tâches enregistrées dans le loader.</p>
+            <code class="prettyprint lang=js">loader.load();</code>
+                
+            <p>Le fait qu'on utilise un loader et un assetmanager implique un préchargement des ressources avant de faire le rendu, donc on ne peut pas lancer le rendu de la scène dès que la page est chargée. Il faut donc faire le rendu une fois que le loader a fini de charger les ressources. Il faut donc adapter la boucle de rendu :</p>
+                <pre class="prettyprint lang=js">loader.onFinish = function(){
+    engine.runRenderLoop(function(){
+        //Mettre les éléments de rendu ici.
+        //...
+    });
+};</pre>
+            <p>Avec l'ajout de ces lignes, le rendu se lancera qu'une fois que les taches sont réalisées (donc une fois que l'objet a fini de charger). Suite à cela, nous sommes prêts à voir plus en détail le fonctionnement du système de collisions.</p>
 			</div>
             
             <div class="w3-container" id="collision" style="margin-top:75px">
 				<h1 class="w3-xxxlarge w3-text-blue"><b>Gestion des collisions.</b></h1>
 				<hr style="width:50px;border:5px solid blue" class="w3-round">
-				<p>
-                </p>
+				<p>Comme vous avez pu le constater, en bougeant la camera traverse les murs et le sol. Dans cette section, nous allons remédier à ce problème et gérer le système de collision dans le rendu.</p>
+                <p>Comme vu dans la section précédente, lors de l'édition et des meshes des murs de la salle, la ligne <code class="prettyprint lang=js">m.checkCollisions = true</code> permet d'activer les collisions. Le fait d'appliquer ça empêche aux objets ayant cette caractéristique sur vrai de se rentrer dedans et donc de rester dans la salle dans le cas de notre musée.</p>
+                <p>Pour chaque élément, il faudra mettre l'attribut <code>checkCollisions</code> égal à true.</p>
+                
+                <h3>Collisions liées à la camera</h3>
+                <p>Il existe une fonction qui permet de détecter si un objet a une collision avec un 2e objet, ce qui peut être pratique pour tester si un objet est dans une zone précise, ce qui sera utile pour l'exposition. Le problème c'est que la hitbox de la caméra n'est pas compatible avec cette fonction, il faudra donc rajouter une sphere de collision.</p>
+                <p>Dans un premier temps, on crée une nouvelle sphere.</p>
+                <code class="prettyprint lang=js">var hitbox = BABYLON.Mesh.CreateSphere("hitbox", 16, 1, scene);</code>
+                
+                <p>Ensuite, nous mettons la sphere au même endroit que la camera (si la camera a changé de position de départ, qui se fait avec la fonction <code class="prettyprint lang=js">objet.position = new BABYLON.Vector3(x, y, z);</code>). Une fois cette étape réalisée, on met cette sphère en enfant de la caméra pour qu'elle dépende des mouvements de la caméra, et donc de sa position.</p>
+                <code class="prettyprint lang=js">hitbox.parent = camera;</code>
+                
+                <p>Il ne manquera plus qu'à rajouter les zones de détection (avec checkCollisions sur false pour ces zones ET pour la hitbox), et vous pourrez faire des zones de trigger pour faire des évènements scriptés ou dans des lieux spécifiques, qu'on mettra en pratique dans la partie <u>Exposition</u>. Maintenant que nous avons la salle d'exposition et une physique normale, avec des contrôles adaptés pour le plus grand nombre, nous pouvons maintenant rajouter des textures pour rendre le musée plus agréable à visiter.</p>
 			</div>
             
             <div class="w3-container" id="textures" style="margin-top:75px">
