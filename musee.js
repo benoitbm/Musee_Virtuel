@@ -27,6 +27,8 @@ var createScene = function()
 	//Création d'un asset manager pour charger les éléments avant le rendu.
 	var loader = new BABYLON.AssetsManager(scene);
 	
+	var music = new BABYLON.Sound("musique", "music/Ambient.mp3", scene, null, {loop: true, autoplay: true, volume: 0.1}); //On rajoute un peu de musique de fond, pour que ça soit agréable.
+	
 	//Gestion de la caméra
 	{
 		var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 3, -10), scene);
@@ -62,11 +64,6 @@ var createScene = function()
 			if (canvas.requestPointerLock) //Si la requête aboutie,
 				canvas.requestPointerLock(); //On appelle la fonction
 		}
-		
-		//continue with shooting requests or whatever :P
-		//evt === 0 (left mouse click)
-		//evt === 1 (mouse wheel click (not scrolling))
-		//evt === 2 (right mouse click)
 	}
 	
 	var pointerlockchange = function () 
